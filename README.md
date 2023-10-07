@@ -33,6 +33,16 @@ python generate_required_dependencies.py --output WebGPU
 python generate_required_dependencies.py --output WebGPU --generate_cpp 1
 ```
 
+4. Add to your project
+
+**If you'r using a building tool other than CMake, you should configure the header path and the linker on your own.**
+
+```cmake
+find_package(WebGPU PATHS PATH/TO/CMake/DIRECTORY NO_DEFAULT_PATH REQUIRED)
+target_link_libraries(YourTarget PUBLIC WebGPU)
+target_include_directories(YourTarget PUBLIC ${WEBGPU_INCLUDE_DIR})
+```
+
 ## Tips
 
 - You can modify `defaults_extra.txt` to override defaults value using by WebGPU-Cpp.
