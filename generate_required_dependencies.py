@@ -7,10 +7,15 @@ from datetime import datetime
 import re
 import os
 import io
+import sys
 from contextlib import closing
 import zipfile
 
-import requests
+try:
+	import requests
+except ImportError:
+	print("You need to install the required module! Run `Setup.bat` or `Setup.sh` first.")
+	sys.exit(1)
 
 
 class SystemType(Enum):
@@ -92,15 +97,16 @@ def download_and_extract_zip(*, url: str, target_path: str):
 
 if __name__ == "__main__":
 	import argparse
-	import sys
 	import shutil
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--output", help="Set output path. Default: WebGPU")
 	parser.add_argument("--force", help="Force remove output path if exists. Default: false")
+	parser.add_argument("--generate_cpp", help="Generate cpp style header. Default: false")
 	args = parser.parse_args()
 
 	output_path = args.output or "WebGPU"
 	force_remove = args.force or False
+	generate_cpp = args.generate_cpp or False
 
 	if os.path.exists(output_path):
 		if not force_remove:
@@ -109,7 +115,6 @@ if __name__ == "__main__":
 				print("Aborted.")
 				sys.exit(0)
 		shutil.rmtree(output_path)
-
 
 	release = get_latest_release_from_webgpu_native()
 	for asset in release.assets:
