@@ -125,6 +125,21 @@ def create_cpp_headers(*, target_path: str):
 	call_external_command(cmd)
 
 
+def move_headers_to_include(*, target_path: str):
+	if not os.path.exists(target_path):
+		raise RuntimeError(f"Target path {target_path} isn't exists.")
+	include_path = os.path.join(target_path, "include/webgpu")
+	if not os.path.exists(include_path):
+		os.makedirs(include_path)
+
+	import glob
+	source_files = glob.glob(f"{target_path}/*.h*")
+
+	import shutil
+	for file_path in source_files:
+		shutil.move(file_path, include_path)
+
+
 if __name__ == "__main__":
 	import argparse
 	import shutil
@@ -159,4 +174,5 @@ if __name__ == "__main__":
 		print(f"Downloading {asset} to '{target_path}' ...")
 		download_and_extract_zip(url=asset.download_url, target_path=target_path)
 		create_cpp_headers(target_path=target_path)
+		move_headers_to_include(target_path=target_path)
 	print("Finished.")
