@@ -47,3 +47,4 @@ target_include_directories(YourTarget PUBLIC ${WEBGPU_INCLUDE_DIR})
 
 - You can modify `defaults_extra.txt` to override defaults value using by WebGPU-Cpp.
 - Use `python generate_required_dependencies.py -h` to see more information.
+- If you encounter network issues, try to export an environment variable `ALL_PROXY=http://your-proxy:7890` to using a proxy.
