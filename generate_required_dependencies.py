@@ -93,6 +93,7 @@ def download_and_extract_zip(*, url: str, target_path: str):
 if __name__ == "__main__":
 	import argparse
 	import sys
+	import shutil
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--output", help="Set output path. Default: WebGPU")
 	parser.add_argument("--force", help="Force remove output path if exists. Default: false")
@@ -107,7 +108,7 @@ if __name__ == "__main__":
 			if ans != "Y":
 				print("Aborted.")
 				sys.exit(0)
-		os.rmdir(output_path)
+		shutil.rmtree(output_path)
 
 
 	release = get_latest_release_from_webgpu_native()
