@@ -95,6 +95,36 @@ def download_and_extract_zip(*, url: str, target_path: str):
 		archive.extractall(target_path)
 
 
+def is_windows():
+	import platform
+	return platform.system() == "Windows"
+
+
+def call_external_command(cmd: str):
+	import subprocess
+	print(f"Running external command:\n{cmd}")
+	subprocess.run(cmd, shell=True, check=True, capture_output=False)
+
+
+WEBGPU_CPP_TOOL_PATH = "Tools/WebGPU-Cpp"
+def pull_webgpu_defaults():
+	script_path = os.path.join(WEBGPU_CPP_TOOL_PATH, "fetch_default_values.py")
+	cmd = f"{'python' if is_windows() else 'python3'} {script_path} --output-defaults defaults.txt --output-spec spec.json"
+	call_external_command(cmd)
+
+
+def create_cpp_headers(*, target_path: str):
+	if not os.path.exists(target_path):
+		raise RuntimeError(f"Target path {target_path} isn't exists.")
+
+	script_path = os.path.join(WEBGPU_CPP_TOOL_PATH, "generate.py")
+	template_path = os.path.join(WEBGPU_CPP_TOOL_PATH, "wgpu-native/webgpu.template.hpp")
+	wgpu_h_path = os.path.join(target_path, "wgpu.h") 
+	output_hpp_path = os.path.join(target_path, "webgpu.hpp")
+	cmd = f"{'python' if is_windows() else 'python3'} {script_path} --template {template_path} --defaults defaults.txt --header-url {wgpu_h_path} --output {output_hpp_path}"
+	call_external_command(cmd)
+
+
 if __name__ == "__main__":
 	import argparse
 	import shutil
@@ -102,11 +132,13 @@ if __name__ == "__main__":
 	parser.add_argument("--output", help="Set output path. Default: WebGPU")
 	parser.add_argument("--force", help="Force remove output path if exists. Default: false")
 	parser.add_argument("--generate_cpp", help="Generate cpp style header. Default: false")
+	parser.add_argument("--update_default", help="Update defaults.txt using by WebGPU-Cpp. Default: false")
 	args = parser.parse_args()
 
 	output_path = args.output or "WebGPU"
 	force_remove = args.force or False
 	generate_cpp = args.generate_cpp or False
+	update_default = args.update_default or False
 
 	if os.path.exists(output_path):
 		if not force_remove:
@@ -116,10 +148,15 @@ if __name__ == "__main__":
 				sys.exit(0)
 		shutil.rmtree(output_path)
 
+	if generate_cpp and (not os.path.exists("defaults.txt") or update_default):
+		print("Updating default values ...")
+		pull_webgpu_defaults()
+
 	release = get_latest_release_from_webgpu_native()
 	for asset in release.assets:
 		target_path = os.path.join(output_path, f"{asset.triple.system.value}", f"{asset.triple.arch.value}-{asset.triple.build.value}")
 		os.makedirs(target_path)
 		print(f"Downloading {asset} to '{target_path}' ...")
 		download_and_extract_zip(url=asset.download_url, target_path=target_path)
+		create_cpp_headers(target_path=target_path)
 	print("Finished.")
