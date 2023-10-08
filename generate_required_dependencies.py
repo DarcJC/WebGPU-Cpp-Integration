@@ -119,7 +119,7 @@ def create_cpp_headers(*, target_path: str):
 
 	script_path = os.path.join(WEBGPU_CPP_TOOL_PATH, "generate.py")
 	template_path = os.path.join("Template", "wgpu-native/webgpu.template.hpp")
-	wgpu_h_path = os.path.join(target_path, "wgpu.h") 
+	wgpu_h_path = os.path.join(target_path, "webgpu.h")
 	output_hpp_path = os.path.join(target_path, "webgpu.hpp")
 	cmd = f"{'python' if is_windows() else 'python3'} {script_path} --template {template_path} --defaults defaults.txt --defaults defaults_extra.txt --header-url {wgpu_h_path} --output {output_hpp_path}"
 	call_external_command(cmd)
