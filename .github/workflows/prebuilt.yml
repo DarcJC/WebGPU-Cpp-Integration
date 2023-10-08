@@ -24,9 +24,17 @@ jobs:
       - name: Retrieve current Date Time in Hongkong TimeZone
         shell: bash
         run: echo "START_TIME=$(TZ=":Asia/Hongkong" date -R|sed 's/.....$//')" >> $GITHUB_ENV
-      - uses: montudor/action-zip@v1
+      - name: Zip Files
+        uses: montudor/action-zip@v1
         with:
           args: zip -qq -r WebGPU.zip WebGPU-Cpp
+      - name: Create Tag
+        uses: rickstaa/action-create-tag@v1
+        id: "tag_create"
+        with:
+          tag: ${{ github.sha }}
+          tag_exists_error: false
+          message: "Automatically release"
       - name: Create release
         uses: softprops/action-gh-release@v1
         env:
