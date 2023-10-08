@@ -29,6 +29,8 @@ jobs:
           args: zip -qq -r WebGPU.zip WebGPU-Cpp
       - name: Create release
         uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           name: ${{ env.START_TIME }}
           tag_name: ${{ github.sha }}
