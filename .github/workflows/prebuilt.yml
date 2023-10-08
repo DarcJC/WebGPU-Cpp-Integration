@@ -31,10 +31,13 @@ jobs:
       - name: Create Tag
         uses: rickstaa/action-create-tag@v1
         id: "tag_create"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag: ${{ github.sha }}
           tag_exists_error: false
           message: "Automatically release"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Create release
         uses: softprops/action-gh-release@v1
         env:
