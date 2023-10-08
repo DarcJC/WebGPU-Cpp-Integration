@@ -1,7 +1,7 @@
 name: 'Prebuilt Package Release'
 on:
   schedule:
-    - cron: '0 0 12 * * ?'
+    - cron: '* 0 * * *'
 jobs:
   build-and-collect:
     name: Build and Collect
