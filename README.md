@@ -1,5 +1,22 @@
 # WebGPU Cpp Integration Utility
 
+## Prebuilt Release
+
+We provided a prebuilt release deliver by Github Action. It will automaticly update about 00:00.
+
+You can simply use it without python and git setup.
+
+1. Download latest release from [here](https://github.com/DarcJC/WebGPU-Cpp-Integration/releases).
+
+2. Place it into your project
+
+3. Setup the include path and linker. If you'r using CMake, we provided a configuration for you. Just the following code into your `CMakeLists.txt`.
+
+```cmake
+find_package(WebGPU PATHS PATH/TO/WebGPU-Cpp/CMake NO_DEFAULT_PATH REQUIRED)
+target_link_libraries(YourTarget PUBLIC WebGPU)
+```
+
 ## Requirements
 
 Python 3.7 and above
@@ -40,7 +57,6 @@ python generate_required_dependencies.py --output WebGPU --generate_cpp 1
 ```cmake
 find_package(WebGPU PATHS PATH/TO/CMake/DIRECTORY NO_DEFAULT_PATH REQUIRED)
 target_link_libraries(YourTarget PUBLIC WebGPU)
-target_include_directories(YourTarget PUBLIC ${WEBGPU_INCLUDE_DIR})
 ```
 
 ## Tips
