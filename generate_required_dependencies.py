@@ -102,8 +102,9 @@ def is_windows():
 
 def call_external_command(cmd: str):
 	import subprocess
-	print(f"Running external command:\n{cmd}")
+	print(f"Running external command:\n{cmd}\n\033[4;36;47m")
 	subprocess.run(cmd, shell=True, check=True, capture_output=False)
+	print("\033[0m")
 
 
 WEBGPU_CPP_TOOL_PATH = "Tools/WebGPU-Cpp"
