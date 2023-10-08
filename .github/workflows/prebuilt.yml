@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: '3.10' 
       - name: Setup requirements
-        run: ./Setup.sh
+        run: chmod +x ./Setup.sh && bash Setup.sh
       - name: Run Script
         run: python generate_required_dependencies.py --output WebGPU --force 1 --generate_cpp 1 --update_default 1
       - name: Move files
