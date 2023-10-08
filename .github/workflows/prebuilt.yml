@@ -23,7 +23,7 @@ jobs:
         run: mkdir WebGPU-Cpp && mv WebGPU WebGPU-Cpp && mv CMake WebGPU-Cpp
       - name: Retrieve current Date Time in Hongkong TimeZone
         shell: bash
-        run: echo "START_TIME=$(TZ=":Asia/Hongkong" date -R|sed 's/.....$//')" >> $GITHUB_ENV
+        run: echo "START_TIME=$(TZ=":Asia/Hongkong" date +"%Y%M%D%H" |sed 's/.....$//'|sed 's/\///g')" >> $GITHUB_ENV
       - name: Zip Files
         uses: montudor/action-zip@v1
         with:
@@ -43,7 +43,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: ${{ env.START_TIME }}
-          tag_name: ${{ github.sha }}
+          tag_name: ${{ env.START_TIME }}
           files: |
             WebGPU.zip
